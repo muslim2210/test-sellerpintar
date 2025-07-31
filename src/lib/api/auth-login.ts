@@ -11,7 +11,6 @@ export async function AuthLogin(username: string, password: string) {
 
     const { token, role } = res.data
     console.log('APP INFO LOGIN',token, role)
-
     // Simpan ke store dan localStorage
     useAuthStore.getState().setAuth(token, role)
 

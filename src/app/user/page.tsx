@@ -1,10 +1,13 @@
+import AuthGuard from '@/components/guards/AuthGuards'
 import React from 'react'
 
 const UserPage = () => {
   return (
-    <div>
-      user page
-    </div>
+    <AuthGuard allowedRole="Admin">
+      <div>
+        user page
+      </div>
+    </AuthGuard>
   )
 }
 
