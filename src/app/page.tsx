@@ -1,24 +1,16 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/auth-store'
+import AuthGuard from '@/components/guards/AuthGuards'
 
 export default function HomePage() {
-  const router = useRouter()
-  const { role } = useAuthStore()
-
-  useEffect(() => {
-    if (role === 'admin') {
-      router.push('/admin')
-    } else if (role === 'user') {
-      router.push('/user')
-    } else {
-      router.push('/auth/login')
-    }
-  }, [role, router])
-
-  return null
-
+  return (
+    <AuthGuard allowedRole="user">
+      <div className="p-4">
+        <h1 className="text-xl font-bold mb-4">Selamat datang, User!</h1>
+        {/* Di sini nanti list artikel user */}
+        halaman list article
+      </div>
+    </AuthGuard>
+  )
 
 }
