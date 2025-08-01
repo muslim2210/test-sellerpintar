@@ -1,5 +1,5 @@
 export interface CategoriModel {
-  id: number;
+  id: string;
   name: string;
   UserId: string;
 }
