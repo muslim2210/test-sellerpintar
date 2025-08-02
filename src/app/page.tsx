@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import Wrapper from '@/components/layout/Wrapper'
 import Pagination from '@/components/fragments/Pagination'
 import AuthGuard from '@/components/guards/AuthGuards'
@@ -14,8 +14,8 @@ import ArticleCard from '@/components/fragments/ArticleCard'
 import HeroTitle from '@/components/articles/HeroTitle'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
-import Logo from '@/components/fragments/Logo'
 import { useFetchArticlesNew } from '@/lib/api/useFetchArticlesNew'
+import Header from '@/components/layout/Header'
 
 const HomePage = () => {
   const [search, setSearch] = useState('')
@@ -49,9 +49,7 @@ const HomePage = () => {
       {/* hero section */}
       <div className="w-full h-[500px] bg-[url('/img/hero-image.jpg')] bg-cover">
         <div className='bg-[#2563EB] opacity-[86%] w-full h-full flex flex-col gap-10 justify-center items-center relative'>
-          <div className='absolute top-0 left-0 right-0 max-w-screen-xl w-full mx-auto px-16 bg-transparent h-[80px] z-10 flex items-center justify-between'>
-            <Logo/>
-          </div>
+          <Header isLogoWhite/>
           <HeroTitle/>
           <div className='bg-blue-500 rounded-md p-2 flex gap-1'>
              {/* Filter by Category */}
@@ -90,7 +88,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <Wrapper className="mt-10 pb-[160px] relative">
+      <Wrapper className="my-10 relative">
         <div className="text-gray-800 flex flex-col gap-2 mb-5">
           <h5 className="font-medium text-gray-500 text-base">
             Showing : {data.length} of {total ?? 0} articles
@@ -113,7 +111,7 @@ const HomePage = () => {
                 imageUrl={article.imageUrl}
                 createdAt={article.createdAt}
                 content={article.content}
-                href={`/article/${article.id}`}
+                href={`/articles/${article.id}`}
               />
             ))
           )}
@@ -129,12 +127,7 @@ const HomePage = () => {
           />
         )}
 
-        {/* footer */}
-      </Wrapper>
-        <div className='absolute bottom-0 left-0 right-0 bg-[#2563EB] w-full mx-auto h-[100px] flex gap-3 items-center justify-center'>
-          <Logo/>
-          <p className='text-white text-base font-normal'>© 2025 Blog genzet. All rights reserved.</p>
-        </div>
+        </Wrapper>
     </AuthGuard>
   )
 }

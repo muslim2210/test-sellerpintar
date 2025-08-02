@@ -80,3 +80,30 @@ export const useFetchArticlesNew = ({
 
   return { data, loading, error, total };
 };
+
+
+export const useFetchArticleDetail = (articleId: string) => {
+  const [data, setData] = useState<ArticleModel | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get<ArticleModel>(`/articles/${articleId}`);
+        setData(res.data);
+        console.info('APP Fetch Article Detail : ',res.data);
+      } catch (err) {
+        setError(err as Error);
+        console.error('APP Fetch Article Detail Error : ',err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, [articleId]);
+
+  return { data, loading, error };
+}

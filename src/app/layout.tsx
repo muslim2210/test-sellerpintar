@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Archivo } from 'next/font/google'
+import Footer from "@/components/layout/Footer";
 
 const archivo = Archivo({
   subsets: ['latin'],
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${archivo.variable} antialiased`}
       >
         {children}
+        <Footer/>
       </body>
     </html>
   );
