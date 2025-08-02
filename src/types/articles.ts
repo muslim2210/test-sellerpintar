@@ -2,10 +2,12 @@ import { CategoriModel } from "./categories"
 import { UserModel } from "./users"
 
 export interface ArticleModel {
-  id: number
+  id: string
   title: string
   content: string
-  userId: number
+  imageUrl: string
+  userId: string
+  categoryId: string
   category: CategoriModel
   user: UserModel
   createdAt: string

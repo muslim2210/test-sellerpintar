@@ -63,5 +63,5 @@ export default function AuthGuard({ allowedRole, children }: Props) {
     </div>
   )
 
-  return <>{children}</>
+  return <div className='relative'>{children}</div>
 }
