@@ -5,7 +5,7 @@ Website manajemen artikel dengan role User dan Admin, dilengkapi fitur autentika
 ## 🚀 Demo
 Live Demo: https://your-vercel-project.vercel.app
 
-GitHub Repo: https://github.com/yourusername/article-management
+GitHub Repo: https://github.com/muslim2210/test-sellerpintar.git
 
 ## ✨ Fitur
 
