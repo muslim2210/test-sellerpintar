@@ -3,22 +3,22 @@
 import AuthGuard from '@/components/guards/AuthGuards'
 import HeaderAdmin from '@/components/layout/HeaderAdmin'
 import Link from 'next/link'
-import React from 'react'
-import { ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { ArrowLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import * as z from 'zod'
+
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-import * as z from 'zod'
 import { createArticle, useUploadImage } from '@/lib/api/useFetchArticlesNew'
-import Image from 'next/image'
 import { useFetchCategories } from '@/lib/api/useFetchCategories'
-import { CategoriModel } from '@/types/categories'
 import UploadImageBox from '@/components/fragments/UploadImageBox'
+import RichTextEditor from '@/components/articles/RichTextEditor'
 import { Label } from '@/components/ui/label'
+import { CategoriModel } from '@/types/categories'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   title: z.string().min(3),
@@ -31,13 +31,25 @@ type FormData = z.infer<typeof formSchema>
 const CreateArticlePage = () => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [content, setContent] = useState<string>('')
+
   const { uploadImage, loadingUpload } = useUploadImage()
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: '',
+      content: '',
+      categoryId: '',
+    }
   })
 
-  // categories
-  const categories = useFetchCategories({fetchAll: true}).data;
+  const categories = useFetchCategories({ fetchAll: true }).data
+  const router = useRouter()
+
+  // 🧠 sinkronkan konten editor ke react-hook-form
+  useEffect(() => {
+    setValue('content', content)
+  }, [content, setValue])
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -52,6 +64,10 @@ const CreateArticlePage = () => {
     }
   }
 
+  const handleRemove = () => {
+    setImageUrl(null)
+  }
+
   const onSubmit = async (data: FormData) => {
     if (!imageUrl) {
       alert('Upload gambar terlebih dahulu.')
@@ -64,6 +80,8 @@ const CreateArticlePage = () => {
       alert('Artikel berhasil ditambahkan!')
       reset()
       setImageUrl(null)
+      setContent('')
+      router.push('/admin/articles')
     } catch (err) {
       console.error(err)
       alert('Gagal menambahkan artikel')
@@ -72,24 +90,18 @@ const CreateArticlePage = () => {
     }
   }
 
-  const handleRemove = () => {
-    setImageUrl(null)
-  }
-
   return (
     <AuthGuard allowedRole="Admin">
       <HeaderAdmin titlePage="Articles" />
-      {/* content */}
       <div className='px-3 bg-gray-100 min-h-screen pt-3'>
         <div className='rounded-md bg-white w-full shadow-sm mb-8'>
-          {/* title */}
           <div className='flex items-center gap-2 text-slate-900 py-2 px-3'>
             <Link href={'/admin/articles'}>
               <ArrowLeft />
             </Link>
             <span className='text-base font-normal '>Create Article</span>
           </div>
-          {/* form */}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full px-3 mt-8">
             <div>
               <Label className='mb-2'>Thumbnails</Label>
@@ -100,26 +112,27 @@ const CreateArticlePage = () => {
                 handleRemove={handleRemove}
               />
             </div>
-            
+
             <div>
               <Label className='mb-2'>Title</Label>
               <Input {...register('title')} placeholder="Input Title" />
               {errors.title && <p className="text-red-500">{errors.title.message}</p>}
             </div>
 
-             <div>
+            <div>
               <Label className='mb-2'>Category</Label>
-              <Select onValueChange={(val) => setValue('categoryId', val)} >
-                <SelectTrigger className="w-full"><SelectValue placeholder="Select Category" /></SelectTrigger>
-                <SelectContent >
+              <Select onValueChange={(val) => setValue('categoryId', val)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
                   {categories?.data.map((category: CategoriModel) => {
-                    // Pastikan setiap id valid
-                    if (!category.id) return null;
+                    if (!category.id) return null  // lewati jika tidak valid
                     return (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
                       </SelectItem>
-                    );
+                    )
                   })}
                 </SelectContent>
               </Select>
@@ -127,12 +140,10 @@ const CreateArticlePage = () => {
             </div>
 
             <div>
-              <label>Konten</label>
-              <Textarea {...register('content')} />
+              <Label className='mb-2'>Content</Label>
+              <RichTextEditor value={content} onChange={setContent} />
               {errors.content && <p className="text-red-500">{errors.content.message}</p>}
             </div>
-
-           
 
             <Button type="submit" disabled={loading}>
               {loading ? 'Menyimpan...' : 'Simpan Artikel'}
@@ -143,7 +154,5 @@ const CreateArticlePage = () => {
     </AuthGuard>
   )
 }
-
-
 
 export default CreateArticlePage

@@ -64,11 +64,12 @@ export const useFetchArticlesNew = ({
               limit,
             },
           });
-
+          console.info('APP Fetch Articles : ', res.data);
           setData(res.data.data);
           setTotal(res.data.total);
         }
       } catch (err) {
+        console.error('APP Fetch Articles Error : ',err);
         setError(err as Error);
       } finally {
         setLoading(false);
