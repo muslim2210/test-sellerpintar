@@ -14,7 +14,7 @@ const UserPage = () => {
   return (
     <AuthGuard allowedRole="User">
       <Header isLogoWhite={false} />
-      <Wrapper className='px-3 md:px-6 lg:px-16 min-h-screen flex justify-center'>
+      <Wrapper className='px-3 md:px-6 lg:px-16 min-h-screen flex justify-center pt-12'>
         <div className='flex flex-col gap-3 justify-center items-center my-2 max-w-[368px]'>
           <h1 className='text-xl font-semibold text-center'>User Profile</h1>
           <UserAvatar name={auth.user?.username || 'User Name'} size={60} />
