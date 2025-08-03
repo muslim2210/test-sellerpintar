@@ -32,7 +32,6 @@ export default function AuthGuard({ allowedRole, children }: Props) {
         }
 
         const currentRole = role || useAuthStore.getState().user?.role
-        console.warn('CURRENT ROLE', currentRole)
 
         if (allowedRole === 'Admin') {
           if (currentRole === 'Admin') {

@@ -3,7 +3,7 @@
 Website manajemen artikel dengan role User dan Admin, dilengkapi fitur autentikasi, otorisasi, manajemen kategori dan artikel, serta tampilan UI responsif.
 
 ## 🚀 Demo
-Live Demo: https://your-vercel-project.vercel.app
+Live Demo: https://test-sellerpintar-three.vercel.app
 
 GitHub Repo: https://github.com/muslim2210/test-sellerpintar.git
 
