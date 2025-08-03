@@ -2,9 +2,6 @@
 
 import { useAuthStore } from '@/stores/auth-store'
 import React from 'react'
-import Wrapper from './Wrapper'
-import Logo from '../fragments/Logo'
-import LogoLogin from '../fragments/LogoLogin'
 import UserAvatar from '../fragments/UserAvatar'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from '../ui/dropdown-menu'
 import Link from 'next/link'
@@ -14,10 +11,10 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Button } from '../ui/button'
 
 interface HeaderProps {
-  isLogoWhite: boolean;
+  titlePage: string;
 }
 
-const Header = ({ isLogoWhite }: HeaderProps) => {
+const HeaderAdmin = ({ titlePage }: HeaderProps) => {
   const auth = useAuthStore()
   const router = useRouter()
   const handleLogout = () => {
@@ -27,14 +24,14 @@ const Header = ({ isLogoWhite }: HeaderProps) => {
   }
 
   return (
-    <div className={`w-full bg-transparent absolute z-50 top-0 right-0 left-0 ${!isLogoWhite ? 'border-b border-slate-200' : ''}`}>
-     <Wrapper className='flex flex-row justify-between items-center px-3 md:px-6 lg:px-16 h-[70px]'>
-      {isLogoWhite ? <Logo /> : <LogoLogin />}
+    <div className='w-full bg-white border-b border-slate-200'>
+     <div className='flex flex-row justify-between items-center px-3 h-[50px]'>
+      <h3 className='text-xl font-semibold text-slate-900'>{titlePage}</h3>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className='flex flex-row gap-2 items-center cursor-pointer'>
           <UserAvatar name={auth.user?.username || 'User Name'} size={23} />
-          <span className={`text-base font-medium ${isLogoWhite ? 'text-white' : 'text-slate-900'}`}>{auth.user?.username}</span>
+          <span className='text-base font-medium text-slate-900'>{auth.user?.username}</span>
         </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[200px]" align="end">
@@ -73,9 +70,9 @@ const Header = ({ isLogoWhite }: HeaderProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-     </Wrapper>
+     </div>
     </div>
   )
 }
 
-export default Header
+export default HeaderAdmin

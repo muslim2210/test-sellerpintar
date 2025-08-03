@@ -2,6 +2,7 @@
 
 import OthersArticles from '@/components/articles/OthersArticles'
 import AuthGuard from '@/components/guards/AuthGuards'
+import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import Wrapper from '@/components/layout/Wrapper'
 import LoadingSpinner from '@/components/loading/LoadingSpinner'
@@ -59,6 +60,7 @@ const ArticleDetailPage = (props: { params: Promise<{ articleId: string }> }) =>
           </div>
           <OthersArticles categoryId={data?.category.id ?? ''}/>
         </Wrapper>
+        <Footer/>
       </AuthGuard>
     )
   }

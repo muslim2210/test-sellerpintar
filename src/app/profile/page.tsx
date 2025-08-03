@@ -1,15 +1,26 @@
 'use client'
 import UserAvatar from '@/components/fragments/UserAvatar'
 import AuthGuard from '@/components/guards/AuthGuards'
+import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import Wrapper from '@/components/layout/Wrapper'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/stores/auth-store'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const UserPage = () => {
   const auth = useAuthStore()
+  const router = useRouter()
+
+  const redirectHome = () => {
+    if (auth.user?.role === "Admin") {
+     return router.push('/admin/articles')
+    } else {
+      return router.push('/')
+    }
+  }
 
   return (
     <AuthGuard allowedRole="User">
@@ -28,11 +39,12 @@ const UserPage = () => {
             <span>:</span>
             <span>{auth.user?.role}</span>
           </div>
-          <Button className='w-full mt-5 cursor-pointer'>
-            <Link href="/">Back to Home</Link>
+          <Button onClick={redirectHome} className='w-full mt-5 cursor-pointer'>
+            Back to Home
           </Button>
         </div>
       </Wrapper>
+      <Footer/>
     </AuthGuard>
   )
 }

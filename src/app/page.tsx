@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 import { useFetchArticlesNew } from '@/lib/api/useFetchArticlesNew'
 import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
 
 const HomePage = () => {
   const [search, setSearch] = useState('')
@@ -128,6 +129,7 @@ const HomePage = () => {
         )}
 
         </Wrapper>
+        <Footer/>
     </AuthGuard>
   )
 }

@@ -107,3 +107,45 @@ export const useFetchArticleDetail = (articleId: string) => {
 
   return { data, loading, error };
 }
+
+
+export const useUploadImage = () => {
+  const [loadingUpload, setLoadingUpload] = useState(false);
+
+  const uploadImage = async (file: File): Promise<string> => {
+    setLoadingUpload(true);
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.info('APP Upload Image : ',response);
+      return response.data.imageUrl;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error('APP Upload Image Error : ', err);
+      throw new Error('Failed to upload image');
+    }finally {
+      setLoadingUpload(false);
+    }
+  };
+
+  return { uploadImage, loadingUpload };
+};
+
+
+export type CreateArticle = {
+  title: string
+  content: string
+  categoryId: string
+  imageUrl?: string
+}
+
+export const createArticle = async (data: CreateArticle) => {
+  const response = await api.post('/articles', data)
+  return response.data
+}
