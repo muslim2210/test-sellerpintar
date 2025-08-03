@@ -150,3 +150,19 @@ export const createArticle = async (data: CreateArticle) => {
   const response = await api.post('/articles', data)
   return response.data
 }
+
+export const updateArticle = async (id: string, data: CreateArticle) => {
+  const response = await api.put(`/articles/${id}`, data)
+  return response.data
+}
+
+export const getArticleById = async (id: string): Promise<ArticleModel> => {
+  const res = await api.get(`/articles/${id}`)
+  return res.data
+}
+
+
+export const deleteArticle = async (id: string) => {
+  const response = await api.delete(`/articles/${id}`)
+  return response.data
+}

@@ -3,29 +3,27 @@
 import AuthGuard from '@/components/guards/AuthGuards'
 import HeaderAdmin from '@/components/layout/HeaderAdmin'
 import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { useParams, useRouter } from 'next/navigation'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
-import { createArticle, useUploadImage } from '@/lib/api/useFetchArticlesNew'
+import { getArticleById, updateArticle, useUploadImage } from '@/lib/api/useFetchArticlesNew'
 import { useFetchCategories } from '@/lib/api/useFetchCategories'
 import UploadImageBox from '@/components/fragments/UploadImageBox'
 import { Label } from '@/components/ui/label'
 import { CategoriModel } from '@/types/categories'
-import { useRouter } from 'next/navigation'
-
 import dynamic from 'next/dynamic'
 
 const RichTextEditor = dynamic(() => import('@/components/articles/RichTextEditor'), {
   ssr: false,
   loading: () => <p className="text-sm text-gray-400">Memuat editor...</p>,
 })
-
 
 const formSchema = z.object({
   title: z.string().min(3),
@@ -35,7 +33,10 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-const CreateArticlePage = () => {
+const EditArticlePage = () => {
+  const { id } = useParams() as { id: string }
+  const router = useRouter()
+
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [content, setContent] = useState<string>('')
@@ -43,17 +44,33 @@ const CreateArticlePage = () => {
   const { uploadImage, loadingUpload } = useUploadImage()
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      content: '',
-      categoryId: '',
-    }
   })
 
   const categories = useFetchCategories({ fetchAll: true }).data
-  const router = useRouter()
 
-  // 🧠 sinkronkan konten editor ke react-hook-form
+  // Ambil data artikel berdasarkan ID
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const article = await getArticleById(id)
+        console.info('APP Fetch Article Detail : ', article)
+        reset({
+          title: article.title,
+          content: article.content,
+          categoryId: article.categoryId,
+        })
+        setContent(article.content)
+        setImageUrl(article.imageUrl)
+      } catch (err) {
+        console.error(err)
+        alert('Gagal mengambil data artikel')
+      }
+    }
+
+    if (id) fetchData()
+  }, [id, reset])
+
+  // Sinkronisasi konten editor ke react-hook-form
   useEffect(() => {
     setValue('content', content)
   }, [content, setValue])
@@ -83,15 +100,12 @@ const CreateArticlePage = () => {
 
     try {
       setLoading(true)
-      await createArticle({ ...data, imageUrl })
-      alert('Artikel berhasil ditambahkan!')
-      reset()
-      setImageUrl(null)
-      setContent('')
+      await updateArticle(id, { ...data, imageUrl })
+      alert('Artikel berhasil diperbarui!')
       router.push('/admin/articles')
     } catch (err) {
       console.error(err)
-      alert('Gagal menambahkan artikel')
+      alert('Gagal memperbarui artikel')
     } finally {
       setLoading(false)
     }
@@ -106,10 +120,10 @@ const CreateArticlePage = () => {
             <Link href={'/admin/articles'}>
               <ArrowLeft />
             </Link>
-            <span className='text-base font-normal '>Create Article</span>
+            <span className='text-base font-normal '>Edit Article</span>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full px-3 pb-5 my-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full px-3 pb-4 mt-8">
             <div>
               <Label className='mb-2'>Thumbnails</Label>
               <UploadImageBox
@@ -151,10 +165,10 @@ const CreateArticlePage = () => {
               <RichTextEditor value={content} onChange={setContent} />
               {errors.content && <p className="text-red-500">{errors.content.message}</p>}
             </div>
-            <div className='flex justify-end gap-2 mb-4'>
+            <div className='flex justify-end gap-2'>
               <Button type="button" variant="outline" onClick={() => router.push('/admin/articles')}>Cancel</Button>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : 'Upload'}
+                {loading ? 'Saving...' : 'Edit Article'}
               </Button>
             </div>
           </form>
@@ -164,4 +178,4 @@ const CreateArticlePage = () => {
   )
 }
 
-export default CreateArticlePage
+export default EditArticlePage

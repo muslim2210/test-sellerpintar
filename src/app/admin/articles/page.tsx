@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useFetchArticlesNew } from '@/lib/api/useFetchArticlesNew'
+import { deleteArticle, useFetchArticlesNew } from '@/lib/api/useFetchArticlesNew'
 import { useFetchCategories } from '@/lib/api/useFetchCategories'
 import { CategoriModel } from '@/types/categories'
 import { Search } from 'lucide-react'
@@ -52,7 +52,14 @@ const AdminArticlesPage = () => {
     React.useEffect(() => {
       setCurrentPage(1)
     }, [debouncedSearch, categoryId])
-  return (
+
+    const handleClickDelete = (id: string) => {
+        deleteArticle(id)
+        window.alert('Article deleted successfully')
+        window.location.reload()
+      }
+
+    return (
     <AuthGuard allowedRole="Admin">
       <HeaderAdmin titlePage="Articles" />
       <div className='px-3 bg-gray-100 min-h-screen pt-3'>
@@ -148,7 +155,9 @@ const AdminArticlesPage = () => {
                           Edit
                         </Link>
                       </span>
-                      <span className='text-underline text-red-600'>Delete</span>
+                      <button onClick={() => handleClickDelete(article.id)} className='text-underline text-red-600 p-0 bg-transparent'>
+                        Delete
+                      </button>
                       </div>
                     </TableCell>
                   </TableRow>               

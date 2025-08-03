@@ -23,7 +23,6 @@ const Header = ({ isLogoWhite }: HeaderProps) => {
   const handleLogout = () => {
     router.push('/auth/login')
     auth.clearAuth()
-    
   }
 
   return (
@@ -34,7 +33,7 @@ const Header = ({ isLogoWhite }: HeaderProps) => {
         <DropdownMenuTrigger asChild>
           <div className='flex flex-row gap-2 items-center cursor-pointer'>
           <UserAvatar name={auth.user?.username || 'User Name'} size={23} />
-          <span className={`text-base font-medium ${isLogoWhite ? 'text-white' : 'text-slate-900'}`}>{auth.user?.username}</span>
+          <span className={`text-base font-medium ${isLogoWhite ? 'text-white' : 'text-slate-900'} hidden md:block`}>{auth.user?.username}</span>
         </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[200px]" align="end">

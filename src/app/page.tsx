@@ -52,13 +52,13 @@ const HomePage = () => {
         <div className='bg-[#2563EB] opacity-[86%] w-full h-full flex flex-col gap-10 justify-center items-center relative'>
           <Header isLogoWhite/>
           <HeroTitle/>
-          <div className='bg-blue-500 rounded-md p-2 flex gap-1'>
+          <div className='bg-blue-500 rounded-md p-2 flex flex-col gap-2 not-first:lg:flex-row md:gap-1'>
              {/* Filter by Category */}
             <Select
               value={categoryId || "all"}
               onValueChange={(val) => setCategoryId(val === "all" ? undefined : val)}
             >
-              <SelectTrigger className="w-[180px] bg-white cursor-pointer">
+              <SelectTrigger className="w-full lg:w-[180px] bg-white cursor-pointer">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
@@ -74,7 +74,7 @@ const HomePage = () => {
                 })}
               </SelectContent>
             </Select>
-            <div className="w-[400px]">
+            <div className="w-full lg:w-[400px]">
               <div className='relative'>
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <Input
@@ -97,7 +97,7 @@ const HomePage = () => {
         </div>
 
         {/* Grid Articles */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-10 mt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-10 mt-5">
           {loading ? (
             Array.from({ length: 8 }).map((_, index) => (
               <LoadingCardCatalog key={index} />

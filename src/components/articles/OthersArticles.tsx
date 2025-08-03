@@ -16,7 +16,7 @@ const OthersArticles = ({ categoryId }: OthersArticlesProps) => {
     })
     
   return (
-    <div className='mt-12'>
+    <div className='mt-12 container mx-auto'>
       <h4 className='font-bold text-xl text-slate-900'>Others articles</h4>
       {/* Grid Articles */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-10 mt-5">
